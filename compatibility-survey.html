@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Avian Compatibility Assessment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #FAFAF7;
+    --orange: #E8651A;
+    --orange-light: #F5854A;
+    --orange-pale: #FDF0E8;
+    --slate: #3D5A73;
+    --slate-light: #6B8BA4;
+    --taupe: #C4B5A5;
+    --taupe-light: #EDE8E3;
+    --charcoal: #1C1917;
+    --mid: #6B6560;
+    --white: #FFFFFF;
+    --error: #C0392B;
+    --success: #2E7D52;
+    --radius: 16px;
+    --radius-sm: 8px;
+    --shadow: 0 4px 32px rgba(28,25,23,0.08), 0 1px 4px rgba(28,25,23,0.04);
+  }
+
+  body {
+    background: var(--cream);
+    font-family: 'Inter', sans-serif;
+    color: var(--charcoal);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .bg-feather {
+    position: fixed;
+    right: -80px;
+    bottom: -60px;
+    opacity: 0.045;
+    pointer-events: none;
+    z-index: 0;
+    transform: rotate(-20deg);
+  }
+  .bg-feather-tl {
+    position: fixed;
+    left: -100px;
+    top: -80px;
+    opacity: 0.035;
+    pointer-events: none;
+    z-index: 0;
+    transform: rotate(160deg) scaleX(-1);
+  }
+
+  .app {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 620px;
+    padding: 24px 16px;
+  }
+
+  /* CARD — closing brace is present */
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--taupe-light);
+    padding: 48px 52px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--orange), var(--orange-light));
+    border-radius: var(--radius) var(--radius) 0 0;
+  }
+
+  /* BRAND */
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 36px;
+  }
+  .brand-icon { color: var(--orange); }
+  .brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--mid);
+  }
+
+  /* INTRO */
+  .intro-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--charcoal);
+    margin-bottom: 6px;
+  }
+  .intro-subtitle {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 20px;
+  }
+  .intro-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-style: italic;
+    line-height: 1.7;
+    color: var(--mid);
+    margin-bottom: 32px;
+    border-left: 2px solid var(--taupe);
+    padding-left: 16px;
+  }
+
+  /* VALIDATION CODE */
+  .vcode-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--slate-light);
+    margin-bottom: 6px;
+  }
+  .vcode-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--taupe-light);
+    border: 1px solid var(--taupe);
+    border-radius: var(--radius-sm);
+    padding: 10px 16px;
+    margin-bottom: 36px;
+  }
+  .vcode-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--slate);
+    user-select: all;
+    cursor: text;
+  }
+  .vcode-egg { color: var(--taupe); flex-shrink: 0; }
+
+  /* DIVIDER */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0;
+    color: var(--taupe);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--taupe-light);
+  }
+
+  /* BUTTON */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--orange);
+    color: var(--white);
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    box-shadow: 0 2px 12px rgba(232,101,26,0.25);
+    letter-spacing: 0.01em;
+  }
+  .btn:hover { background: var(--orange-light); box-shadow: 0 4px 20px rgba(232,101,26,0.35); }
+  .btn:active { transform: scale(0.98); }
+  .btn-full { width: 100%; justify-content: center; }
+  .btn-slate {
+    background: var(--slate);
+    box-shadow: 0 2px 12px rgba(61,90,115,0.18);
+  }
+  .btn-slate:hover { background: var(--slate-light); box-shadow: 0 4px 20px rgba(61,90,115,0.28); }
+
+  /* PROGRESS */
+  .progress-wrap { margin-bottom: 32px; }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .progress-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate-light);
+  }
+  .progress-count {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    color: var(--taupe);
+  }
+  .progress-track {
+    height: 6px;
+    background: var(--taupe-light);
+    border-radius: 99px;
+    position: relative;
+    overflow: visible;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--orange), var(--orange-light));
+    border-radius: 99px;
+    transition: width 0.5s cubic-bezier(0.22,1,0.36,1);
+    position: relative;
+  }
+  .progress-bird {
+    position: absolute;
+    right: -10px;
+    top: -12px;
+    color: var(--orange);
+    pointer-events: none;
+  }
+
+  /* QUESTION */
+  .q-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .q-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--charcoal);
+    margin-bottom: 28px;
+  }
+
+  /* INPUT */
+  .input-wrap { position: relative; margin-bottom: 24px; }
+  .inp {
+    width: 100%;
+    border: 1.5px solid var(--taupe);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+    color: var(--charcoal);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+  }
+  .inp:focus {
+    border-color: var(--orange);
+    box-shadow: 0 0 0 3px rgba(232,101,26,0.1);
+    background: var(--white);
+  }
+  .inp.inp-err  { border-color: var(--error); background: #fdf5f5; }
+  .inp.inp-err:focus  { box-shadow: 0 0 0 3px rgba(192,57,43,0.1); }
+  .inp.inp-ok   { border-color: var(--success); background: #f4fdf8; }
+  .inp.inp-ok:focus   { box-shadow: 0 0 0 3px rgba(46,125,82,0.1); }
+  textarea.inp  { resize: vertical; min-height: 110px; }
+
+  .inp-feedback {
+    font-size: 12px;
+    margin-top: 6px;
+    min-height: 18px;
+    font-weight: 500;
+  }
+  .inp-feedback.err  { color: var(--error); }
+  .inp-feedback.ok   { color: var(--success); }
+  .inp-feedback.hint { color: var(--slate-light); }
+
+  /* YES/NO */
+  .yn-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .yn-btn {
+    border: 1.5px solid var(--taupe);
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    padding: 18px 12px;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    color: var(--charcoal);
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .yn-btn:hover { border-color: var(--orange); background: var(--orange-pale); }
+  .yn-btn.selected {
+    border-color: var(--orange);
+    background: var(--orange-pale);
+    color: var(--orange);
+    font-weight: 600;
+  }
+
+  /* MULTIPLE CHOICE */
+  .mc-wrap { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .mc-opt {
+    border: 1.5px solid var(--taupe);
+    background: var(--cream);
+    border-radius: var(--radius-sm);
+    padding: 14px 18px;
+    font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    color: var(--charcoal);
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .mc-opt:hover { border-color: var(--orange); background: var(--orange-pale); }
+  .mc-opt.selected { border-color: var(--orange); background: var(--orange-pale); color: var(--orange); font-weight: 500; }
+  .mc-dot {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid currentColor;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+  .mc-opt.selected .mc-dot { background: var(--orange); border-color: var(--orange); }
+  .mc-dot-inner {
+    width: 6px; height: 6px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .mc-opt.selected .mc-dot-inner { opacity: 1; }
+
+  /* NUMERIC */
+  .num-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .num-feedback {
+    margin-bottom: 12px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 20px;
+  }
+  .num-feedback.higher { color: var(--orange); }
+  .num-feedback.lower  { color: var(--slate); }
+
+  /* RESULTS */
+  .results-score-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--slate-light);
+    text-align: center;
+    margin-bottom: 8px;
+  }
+  .results-score {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 86px;
+    font-weight: 600;
+    color: var(--orange);
+    text-align: center;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .results-pct { font-family: 'Cormorant Garamond', serif; font-size: 36px; color: var(--taupe); }
+  .results-status {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-style: italic;
+    color: var(--slate);
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .results-bird {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 16px;
+    color: var(--orange);
+    opacity: 0.85;
+  }
+  .results-vcode-section {
+    border-top: 1px solid var(--taupe-light);
+    padding-top: 20px;
+    margin-top: 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* FOOTER */
+  .footer-tracks {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 20px;
+    opacity: 0.3;
+    color: var(--slate);
+  }
+
+  @media (max-width: 540px) {
+    .card { padding: 32px 24px; }
+    .intro-title { font-size: 30px; }
+    .q-text { font-size: 22px; }
+    .results-score { font-size: 64px; }
+  }
+</style>
+</head>
+<body>
+
+<svg class="bg-feather" width="520" height="680" viewBox="0 0 520 680" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M260 10 C260 10, 480 180, 430 420 C380 660, 130 650, 100 500 C70 350, 200 280, 260 10Z" fill="#3D5A73"/>
+  <path d="M260 10 C260 10, 200 280, 180 500" stroke="#3D5A73" stroke-width="3" fill="none"/>
+  <path d="M260 10 C290 120, 380 200, 410 350" stroke="#3D5A73" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <path d="M255 60 C280 140, 350 220, 380 370" stroke="#3D5A73" stroke-width="1" fill="none" opacity="0.3"/>
+  <path d="M248 110 C260 200, 310 290, 330 420" stroke="#3D5A73" stroke-width="1" fill="none" opacity="0.3"/>
+  <path d="M240 170 C248 260, 280 360, 280 470" stroke="#3D5A73" stroke-width="1" fill="none" opacity="0.3"/>
+  <path d="M230 240 C234 330, 248 430, 232 540" stroke="#3D5A73" stroke-width="1" fill="none" opacity="0.3"/>
+</svg>
+<svg class="bg-feather-tl" width="420" height="560" viewBox="0 0 420 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M210 10 C210 10, 390 150, 350 350 C310 550, 100 540, 80 410 C60 280, 160 230, 210 10Z" fill="#E8651A"/>
+  <path d="M210 10 C210 10, 160 230, 145 410" stroke="#E8651A" stroke-width="2.5" fill="none"/>
+</svg>
+
+<div class="app">
+  <div class="card" id="main-card"></div>
+  <div class="footer-tracks">
+    <svg width="12" height="20" viewBox="0 0 12 20"><ellipse cx="6" cy="3" rx="2" ry="3" fill="currentColor"/><path d="M2 10 L6 7 L10 10" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M1 14 L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11 14 L7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M6 14 L6 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <svg width="12" height="20" viewBox="0 0 12 20"><ellipse cx="6" cy="3" rx="2" ry="3" fill="currentColor"/><path d="M2 10 L6 7 L10 10" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M1 14 L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11 14 L7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M6 14 L6 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <svg width="12" height="20" viewBox="0 0 12 20" style="transform:translateX(8px)"><ellipse cx="6" cy="3" rx="2" ry="3" fill="currentColor"/><path d="M2 10 L6 7 L10 10" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M1 14 L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11 14 L7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M6 14 L6 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <svg width="12" height="20" viewBox="0 0 12 20" style="transform:translateX(8px)"><ellipse cx="6" cy="3" rx="2" ry="3" fill="currentColor"/><path d="M2 10 L6 7 L10 10" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M1 14 L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11 14 L7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M6 14 L6 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    <svg width="12" height="20" viewBox="0 0 12 20" style="transform:translateX(16px)"><ellipse cx="6" cy="3" rx="2" ry="3" fill="currentColor"/><path d="M2 10 L6 7 L10 10" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M1 14 L5 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M11 14 L7 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M6 14 L6 17" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </div>
+</div>
+
+<script>
+// ─── SVG CONSTANTS ────────────────────────────────────────────────────────────
+const BIRD_SVG = `<svg width="24" height="16" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 9 C4 5, 8 3, 12 4 C14 4.5, 16 6, 20 3 C22 2, 23 1, 24 0 C23 2, 22 5, 20 6 C18 7, 16 6.5, 14 7 C12 7.5, 10 9, 8 11 C6 13, 3 14, 0 13 Z" fill="currentColor"/><path d="M12 4 L14 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>`;
+
+const FEATHER_SMALL = `<svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 1 C8 1, 14 5, 13 10 C12 15, 4 15, 3.5 12 C3 9, 7 7, 8 1Z" fill="currentColor" opacity="0.25"/><path d="M8 1 C8 1, 6 8, 5.5 12" stroke="currentColor" stroke-width="1" fill="none"/></svg>`;
+
+const EGG_SVG = `<svg width="20" height="24" viewBox="0 0 20 24" fill="none"><ellipse cx="10" cy="13" rx="8" ry="10" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="1.5"/></svg>`;
+
+const CHEVRON = `<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4L10 8L6 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+const CHECK_SVG = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7L5.5 10.5L12 3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+const ARROW_UP   = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 11V3M4 6L7 3L10 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const ARROW_DOWN = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 3V11M4 8L7 11L10 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+// ─── VALIDATION CODE ──────────────────────────────────────────────────────────
+function generateCode() {
+  const encoded = Date.now().toString(36).toUpperCase().slice(-6);
+  let sum = 0;
+  for (const c of encoded) sum = (sum + c.charCodeAt(0)) & 0xFFFF;
+  const checksum = sum.toString(16).toUpperCase().padStart(4, '0');
+  return `FC-${encoded}-${checksum}`;
+}
+
+// ─── QUESTIONS ────────────────────────────────────────────────────────────────
+const TOTAL_DISPLAY = 765;
+const displayIndices = [1, 2, 3, 7, 14, 22, 37, 58, 89, 112, 138, 166, 201, 228, 247, 289, 311, 340, 388, 412];
+
+const questions = [
+  {
+    id: 'name', type: 'text',
+    text: 'What is my name?',
+    placeholder: 'Enter name…',
+    feedback: (v) => {
+      if (!v) return null;
+      if (v.length > 2) return { cls: 'err', msg: '✗ Name not recognised in database.' };
+      return { cls: 'hint', msg: 'Keep entering…' };
+    },
+    validate: (v) => v !== null && v.trim().length > 0
+  },
+  {
+    id: 'name_correct', type: 'yesno',
+    text: 'Did you type it correctly?',
+    feedback: null,
+    validate: (v) => v !== null
+  },
+  {
+    id: 'name_sure', type: 'yesno',
+    text: 'Are you sure?',
+    feedback: null,
+    validate: (v) => v !== null
+  },
+  {
+    id: 'age', type: 'numeric',
+    text: 'What is my age?',
+    placeholder: '0', unit: 'years',
+    numFeedback: (v) => {
+      const n = parseInt(v);
+      if (isNaN(n) || v === '') return null;
+      if (n < 90) return { cls: 'higher', msg: `${ARROW_UP} Higher` };
+      return { cls: 'lower', msg: `${ARROW_DOWN} Lower` };
+    },
+    validate: (v) => v !== null && v.trim() !== '' && !isNaN(parseInt(v))
+  },
+  {
+    id: 'cloaca', type: 'yesno',
+    text: 'Do you know what a cloaca is?',
+    feedback: null,
+    validate: (v) => v !== null
+  },
+  {
+    id: 'smoke', type: 'yesno',
+    text: 'Do you smoke?',
+    feedback: null,
+    validate: (v) => v !== null
+  },
+  {
+    id: 'bongo', type: 'text',
+    text: 'What is a bongo?',
+    placeholder: 'Describe in your own words…',
+    feedback: (v) => {
+      if (!v) return null;
+      const l = v.toLowerCase();
+      if (l.includes('drum') || l.includes('music') || l.includes('antelope') || l.includes('animal'))
+        return { cls: 'ok', msg: '✓ Partially accepted. Continue.' };
+      if (v.length > 20) return { cls: 'hint', msg: 'Assessment engine processing…' };
+      return null;
+    },
+    validate: (v) => v !== null && v.trim().length > 3
+  },
+  {
+    id: 'bongo_smoke', type: 'text',
+    text: 'If you do not smoke, how do you know what a bongo is?',
+    placeholder: 'Explain your reasoning…',
+    feedback: null,
+    validate: (v) => v !== null && v.trim().length > 0
+  },
+  {
+    id: 'joke', type: 'textarea',
+    text: 'Write a joke.',
+    placeholder: 'Your best material…',
+    feedback: (v) => {
+      if (!v || v.length <= 60) return null;
+      return { cls: 'hint', msg: 'Humour analysis in progress…' };
+    },
+    validate: (v) => v !== null && v.trim().length > 0
+  },
+  {
+    id: 'funny', type: 'yesno',
+    text: 'Was it funny?',
+    feedback: null,
+    validate: (v) => v !== null
+  },
+  {
+    id: 'birds', type: 'mc',
+    text: 'How do you feel about birds?',
+    options: ['Deeply fond of them', 'Neutral observer', 'Mild indifference', 'Strong reservations'],
+    validate: (v) => v !== null
+  },
+  {
+    id: 'psychopath', type: 'yesno',
+    text: 'Are you a psychopath?',
+    feedback: (v) => {
+      if (v === 'yes') return { cls: 'ok',   msg: '✓ Honesty noted. Proceeding.' };
+      if (v === 'no')  return { cls: 'hint', msg: 'That is what a psychopath would say.' };
+      return null;
+    },
+    validate: (v) => v !== null
+  },
+  {
+    id: 'commitment', type: 'mc',
+    text: 'How often do you reply to messages within 24 hours?',
+    options: ['Always', 'Usually', 'Sometimes', 'What messages'],
+    validate: (v) => v !== null
+  },
+  {
+    id: 'weather', type: 'yesno',
+    text: 'Do you enjoy being outside in light rain?',
+    feedback: null,
+    validate: (v) => v !== null
+  },
+  {
+    id: 'playlist', type: 'text',
+    text: 'Name one artist you would put on a shared playlist without hesitation.',
+    placeholder: 'Artist name…',
+    feedback: (v) => {
+      if (!v || !v.trim()) return null;
+      return { cls: 'ok', msg: `✓ "${v.trim()}" logged.` };
+    },
+    validate: (v) => v !== null && v.trim().length > 0
+  },
+  {
+    id: 'silent', type: 'yesno',
+    text: 'Are you comfortable with extended silences?',
+    feedback: null,
+    validate: (v) => v !== null
+  },
+  {
+    id: 'nest', type: 'mc',
+    text: 'How would you describe your living space?',
+    options: ['Immaculate', 'Organised chaos', 'Comfortable disorder', 'A crime scene'],
+    validate: (v) => v !== null
+  },
+  {
+    id: 'migration', type: 'yesno',
+    text: 'Have you ever spontaneously changed your plans entirely?',
+    feedback: null,
+    validate: (v) => v !== null
+  },
+  {
+    id: 'feather', type: 'text',
+    text: 'If you were a bird, what species would you be and why?',
+    placeholder: 'Species and justification…',
+    feedback: (v) => {
+      if (!v || v.length <= 50) return null;
+      return { cls: 'ok', msg: '✓ Ornithological self-assessment recorded.' };
+    },
+    validate: (v) => v !== null && v.trim().length > 0
+  },
+  {
+    id: 'final', type: 'yesno',
+    text: 'Do you believe this survey has assessed you accurately?',
+    feedback: (v) => {
+      if (v === 'yes') return { cls: 'hint', msg: 'Optimism noted.' };
+      if (v === 'no')  return { cls: 'hint', msg: 'The algorithm respectfully disagrees.' };
+      return null;
+    },
+    validate: (v) => v !== null
+  }
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+const state = {
+  screen: 'intro',
+  qIndex: 0,
+  answers: {},
+  validationCode: generateCode(),
+  currentValue: null,
+};
+
+// ─── SCORE ────────────────────────────────────────────────────────────────────
+function computeScore() {
+  let base = 47;
+  Object.values(state.answers).forEach((v, i) => {
+    const code = (v || '').toString().charCodeAt(0) || 0;
+    base = (base + code * (i + 1)) % 37 + (i % 5);
+  });
+  return 51 + (base % 44);
+}
+
+function getStatus(score) {
+  if (score >= 88) return 'Exceptional Compatibility';
+  if (score >= 78) return 'High Compatibility';
+  if (score >= 68) return 'Moderate Compatibility';
+  if (score >= 58) return 'Marginal Compatibility';
+  return 'Compatibility Pending Further Review';
+}
+
+// ─── HELPERS ──────────────────────────────────────────────────────────────────
+function esc(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ─── HTML BUILDERS ────────────────────────────────────────────────────────────
+function brandHTML() {
+  return `<div class="brand">
+    <span class="brand-icon">${BIRD_SVG}</span>
+    <span class="brand-name">Avian Compatibility Institute</span>
+  </div>`;
+}
+
+function progressHTML() {
+  const pct = ((state.qIndex + 1) / questions.length) * 100;
+  const displayed = displayIndices[state.qIndex] || (state.qIndex + 1);
+  return `<div class="progress-wrap">
+    <div class="progress-meta">
+      <span class="progress-label">Assessment Progress</span>
+      <span class="progress-count">Question ${displayed} of ${TOTAL_DISPLAY}</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" style="width:${pct}%">
+        <span class="progress-bird">${BIRD_SVG}</span>
+      </div>
+    </div>
+  </div>`;
+}
+
+function nextBtnHTML(isValid, label) {
+  const cls = isValid ? 'btn btn-full btn-next' : 'btn btn-full btn-slate btn-next';
+  const style = isValid ? '' : ' style="opacity:0.55;cursor:not-allowed"';
+  return `<button id="btn-next" class="${cls}"${style} onclick="nextQuestion()">${label} ${CHEVRON}</button>`;
+}
+
+function renderIntro() {
+  return `${brandHTML()}
+  <div class="intro-subtitle">Compatibility Assessment · Form ACI-7</div>
+  <div class="intro-title">Candidate<br>Evaluation Survey</div>
+  <p class="intro-desc">This survey is used to determine compatibility with the candidate. The assessment consists of multiple questions of varying importance. Please answer each question honestly. Once started, the survey cannot be restarted.</p>
+  <div class="vcode-label">Validation Code — retain for your records</div>
+  <div class="vcode-box">
+    <span class="vcode-egg">${EGG_SVG}</span>
+    <span class="vcode-value">${state.validationCode}</span>
+  </div>
+  <div class="divider">${FEATHER_SMALL} Begin when ready ${FEATHER_SMALL}</div>
+  <button class="btn btn-full" onclick="startSurvey()">Begin Assessment ${CHEVRON}</button>`;
+}
+
+function renderQuestion() {
+  const q = questions[state.qIndex];
+  const val = state.currentValue;
+  const isValid = q.validate(val);
+  const label = state.qIndex < questions.length - 1 ? 'Continue' : 'Submit Assessment';
+  let controlHTML = '';
+
+  if (q.type === 'text') {
+    const fb = q.feedback ? q.feedback(val || '') : null;
+    controlHTML = `<div class="input-wrap">
+      <input id="ans-inp" class="inp${fb ? ' inp-' + fb.cls : ''}" type="text"
+        placeholder="${esc(q.placeholder)}" value="${esc(val)}"
+        oninput="onTextInput(this.value)" autocomplete="off"/>
+      <div class="inp-feedback${fb ? ' ' + fb.cls : ''}">${fb ? fb.msg : ''}</div>
+    </div>`;
+
+  } else if (q.type === 'textarea') {
+    const fb = q.feedback ? q.feedback(val || '') : null;
+    controlHTML = `<div class="input-wrap">
+      <textarea id="ans-inp" class="inp${fb ? ' inp-' + fb.cls : ''}"
+        placeholder="${esc(q.placeholder)}"
+        oninput="onTextInput(this.value)">${esc(val)}</textarea>
+      <div class="inp-feedback${fb ? ' ' + fb.cls : ''}">${fb ? fb.msg : ''}</div>
+    </div>`;
+
+  } else if (q.type === 'yesno') {
+    const fb = q.feedback && val ? q.feedback(val) : null;
+    controlHTML = `<div class="yn-wrap">
+      <button class="yn-btn${val === 'yes' ? ' selected' : ''}" onclick="selectYN('yes')">
+        ${val === 'yes' ? CHECK_SVG + ' ' : ''}Yes
+      </button>
+      <button class="yn-btn${val === 'no' ? ' selected' : ''}" onclick="selectYN('no')">
+        No
+      </button>
+    </div>
+    <div class="inp-feedback${fb ? ' ' + fb.cls : ''}">${fb ? fb.msg : ''}</div>`;
+
+  } else if (q.type === 'mc') {
+    const opts = q.options.map(o =>
+      `<button class="mc-opt${val === o ? ' selected' : ''}" data-value="${esc(o)}" onclick="selectMC(this)">
+        <span class="mc-dot"><span class="mc-dot-inner"></span></span>
+        ${esc(o)}
+      </button>`
+    ).join('');
+    controlHTML = `<div class="mc-wrap">${opts}</div>`;
+
+  } else if (q.type === 'numeric') {
+    const fb = q.numFeedback ? q.numFeedback(val || '') : null;
+    controlHTML = `<div>
+      <div class="num-wrap">
+        <input id="ans-inp" class="inp" type="number" min="0" max="999"
+          placeholder="0" value="${esc(val)}"
+          oninput="onTextInput(this.value)" style="max-width:160px;" autocomplete="off"/>
+        ${q.unit ? `<span style="font-size:14px;color:var(--mid)">${q.unit}</span>` : ''}
+      </div>
+      <div class="num-feedback${fb ? ' ' + fb.cls : ''}">${fb ? fb.msg : ''}</div>
+    </div>`;
+  }
+
+  return `${brandHTML()}
+  ${progressHTML()}
+  <div class="q-eyebrow">${FEATHER_SMALL} Compatibility Indicator</div>
+  <div class="q-text">${esc(q.text)}</div>
+  ${controlHTML}
+  ${nextBtnHTML(isValid, label)}`;
+}
+
+function renderResults() {
+  const score = computeScore();
+  const status = getStatus(score);
+  return `${brandHTML()}
+  <div class="results-bird"><svg width="64" height="42" viewBox="0 0 64 42" fill="none"><path d="M0 24 C10 13, 22 8, 32 11 C38 12.5, 43 16, 54 8 C59 5, 62 2.5, 64 0 C63 6, 61 14, 55 17 C48 19, 43 17, 38 19 C32 20.5, 26 25, 21 30 C15 35, 7 38, 0 35 Z" fill="currentColor"/><path d="M32 11 L37 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+  <div class="results-score-label">Compatibility Score</div>
+  <div class="results-score">${score}<span class="results-pct">%</span></div>
+  <div class="results-status">${status}</div>
+  <div class="results-vcode-section">
+    <div class="vcode-label">Validation Code</div>
+    <div class="vcode-box">
+      <span class="vcode-egg">${EGG_SVG}</span>
+      <span class="vcode-value">${state.validationCode}</span>
+    </div>
+  </div>`;
+}
+
+// ─── TRANSITIONS ──────────────────────────────────────────────────────────────
+function transition(renderFn) {
+  const card = document.getElementById('main-card');
+
+  card.style.transition = 'opacity 0.22s ease, transform 0.22s ease';
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(-16px) scale(0.98)';
+
+  setTimeout(() => {
+    card.innerHTML = renderFn();
+
+    card.style.transition = 'none';
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px) scale(0.98)';
+
+    void card.offsetHeight; // force reflow
+
+    card.style.transition = 'opacity 0.35s cubic-bezier(0.22,1,0.36,1), transform 0.35s cubic-bezier(0.22,1,0.36,1)';
+    card.style.opacity = '1';
+    card.style.transform = 'translateY(0) scale(1)';
+
+    const inp = card.querySelector('input, textarea');
+    if (inp) setTimeout(() => inp.focus(), 80);
+  }, 240);
+}
+
+// ─── ACTIONS ──────────────────────────────────────────────────────────────────
+function startSurvey() {
+  state.qIndex = 0;
+  state.currentValue = null;
+  transition(renderQuestion);
+}
+
+function onTextInput(val) {
+  state.currentValue = val;
+  const q = questions[state.qIndex];
+  const card = document.getElementById('main-card');
+
+  if (q.type === 'text' || q.type === 'textarea') {
+    const fb = q.feedback ? q.feedback(val) : null;
+    const inp = document.getElementById('ans-inp');
+    const fbEl = card.querySelector('.inp-feedback');
+    if (inp) inp.className = 'inp' + (fb ? ' inp-' + fb.cls : '');
+    if (fbEl) { fbEl.className = 'inp-feedback' + (fb ? ' ' + fb.cls : ''); fbEl.innerHTML = fb ? fb.msg : ''; }
+
+  } else if (q.type === 'numeric') {
+    const fb = q.numFeedback ? q.numFeedback(val) : null;
+    const fbEl = card.querySelector('.num-feedback');
+    if (fbEl) { fbEl.className = 'num-feedback' + (fb ? ' ' + fb.cls : ''); fbEl.innerHTML = fb ? fb.msg : ''; }
+  }
+
+  refreshNextButton();
+}
+
+function selectYN(val) {
+  state.currentValue = val;
+  const q = questions[state.qIndex];
+  const card = document.getElementById('main-card');
+
+  card.querySelectorAll('.yn-btn').forEach((b, i) => {
+    const isYes = i === 0;
+    const selected = (isYes && val === 'yes') || (!isYes && val === 'no');
+    b.className = 'yn-btn' + (selected ? ' selected' : '');
+    b.innerHTML = (selected && isYes) ? `${CHECK_SVG} Yes` : (isYes ? 'Yes' : 'No');
+  });
+
+  const fb = q.feedback ? q.feedback(val) : null;
+  const fbEl = card.querySelector('.inp-feedback');
+  if (fbEl) { fbEl.className = 'inp-feedback' + (fb ? ' ' + fb.cls : ''); fbEl.innerHTML = fb ? fb.msg : ''; }
+
+  refreshNextButton();
+}
+
+function selectMC(btn) {
+  const val = btn.dataset.value;
+  state.currentValue = val;
+
+  document.querySelectorAll('#main-card .mc-opt').forEach(b => {
+    b.className = 'mc-opt' + (b.dataset.value === val ? ' selected' : '');
+  });
+
+  refreshNextButton();
+}
+
+function refreshNextButton() {
+  const q = questions[state.qIndex];
+  const btn = document.getElementById('btn-next');
+  if (!btn) return;
+  const valid = q.validate(state.currentValue);
+  btn.style.opacity = valid ? '1' : '0.55';
+  btn.style.cursor  = valid ? 'pointer' : 'not-allowed';
+  btn.className = 'btn btn-full btn-next' + (valid ? '' : ' btn-slate');
+}
+
+function nextQuestion() {
+  const q = questions[state.qIndex];
+  if (!q.validate(state.currentValue)) return;
+
+  state.answers[q.id] = state.currentValue;
+  state.qIndex++;
+
+  if (state.qIndex >= questions.length) {
+    transition(renderResults);
+  } else {
+    state.currentValue = null;
+    transition(renderQuestion);
+  }
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+document.getElementById('main-card').innerHTML = renderIntro();
+</script>
+</body>
+</html>
