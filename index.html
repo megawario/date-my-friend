@@ -438,6 +438,96 @@
     color: var(--slate);
   }
 
+  /* +1 ANIMATION OVERLAY */
+  .plus-one-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .plus-one-bubble {
+    background: linear-gradient(135deg, var(--orange), var(--orange-light));
+    color: white;
+    border-radius: 16px;
+    padding: 16px 32px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(232,101,26,0.35);
+    animation: plusOnePop 1.6s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  .plus-one-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    font-weight: 600;
+    line-height: 1;
+    display: block;
+  }
+  .plus-one-msg {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.9;
+    display: block;
+    margin-top: 4px;
+  }
+  @keyframes plusOnePop {
+    0%   { opacity: 0; transform: scale(0.6) translateY(30px); }
+    15%  { opacity: 1; transform: scale(1.08) translateY(-8px); }
+    30%  { transform: scale(1) translateY(0); }
+    70%  { opacity: 1; transform: scale(1) translateY(-10px); }
+    100% { opacity: 0; transform: scale(0.9) translateY(-40px); }
+  }
+
+  /* DID YOU KNOW SLIDE */
+  .dyk-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--slate-light);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .dyk-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 34px;
+    font-weight: 500;
+    color: var(--charcoal);
+    margin-bottom: 6px;
+    line-height: 1.15;
+  }
+  .dyk-title span { color: var(--orange); }
+  .dyk-fact {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--mid);
+    border-left: 3px solid var(--orange-light);
+    padding: 14px 18px;
+    background: var(--orange-pale);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin: 24px 0 32px;
+  }
+
+  /* RESULTS TIME */
+  .results-time {
+    font-size: 12px;
+    color: var(--taupe);
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+    margin-top: 8px;
+    letter-spacing: 0.05em;
+  }
+
   @media (max-width: 540px) {
     .card { padding: 32px 24px; }
     .intro-title { font-size: 30px; }
@@ -497,32 +587,43 @@ function generateCode() {
   return `FC-${encoded}-${checksum}`;
 }
 
+function generateEndCode(startCode) {
+  // Add a random 3-digit number prefix, then change only the last character
+  const prefix = Math.floor(100 + Math.random() * 900);
+  const lastChar = startCode[startCode.length - 1];
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789'.replace(lastChar, '');
+  const newLast = chars[Math.floor(Math.random() * chars.length)];
+  return `${prefix}-${startCode.slice(0, -1)}${newLast}`;
+}
+
+// ─── DID YOU KNOW FACTS ───────────────────────────────────────────────────────
+const DID_YOU_KNOW_FACTS = [
+  "Her favorite animal is actually a Zebra! Its true, ask her.",
+  "Do you like movies? Well, too bad. She doesn't like movies that mutch.",
+  "Are you great? because she is great!",
+  "She likes walking, carnittas, and going to the gym!",
+  "Her bedtime is at 22h, but will wake up at 6am to stare at you.",
+];
+
+// ─── ENCOURAGING MESSAGES ─────────────────────────────────────────────────────
+const ENCOURAGING_MESSAGES = [
+  "Very good!", "De Puta Madre!", "Excellent!", "Well done!", "Spot on!", "Brilliant!",
+  "Outstanding!", "Impressive!", "Top marks!", "Superb!", "Remarkable!","Caralho!"
+];
+
 // ─── QUESTIONS ────────────────────────────────────────────────────────────────
 const TOTAL_DISPLAY = 765;
 const displayIndices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
 
 const questions = [
-  {
-    id: 'name', type: 'text',
-    text: 'What is my name?',
-    placeholder: 'Enter name…',
+    {
+    id: 'date', type: 'yesno',
+    text: 'Would you like to date-date me?',
     feedback: (v) => {
-      if (!v) return null;
-      if (v.length > 4) return { cls: 'err', msg: '✗ Name not recognised in database.' };
-      return { cls: 'hint', msg: 'Keep entering…' };
+      if (v === 'yes') return { cls: 'hint', msg: 'Of course you would' };
+      if (v === 'no')  return { cls: 'hint', msg: 'Pretty stupid of you to say no!' };
+      return null;
     },
-    validate: (v) => v !== null && v.trim().length > 0
-  },
-  {
-    id: 'name_correct', type: 'yesno',
-    text: 'Did you type it correctly?',
-    feedback: null,
-    validate: (v) => v !== null
-  },
-  {
-    id: 'name_sure', type: 'yesno',
-    text: 'Are you sure?',
-    feedback: null,
     validate: (v) => v !== null
   },
   {
@@ -538,37 +639,42 @@ const questions = [
     validate: (v) => v !== null && v.trim() !== '' && !isNaN(parseInt(v))
   },
   {
-    id: 'cloaca', type: 'yesno',
-    text: 'Do you know what a cloaca is?',
-    feedback: null,
+    id: 'family', type: 'yesno',
+    text: 'Do you want a family?',
+    feedback: (v) => {
+      if (v === 'yes') return { cls: 'hint', msg: 'Of course you would' };
+      if (v === 'no')  return { cls: 'hint', msg: 'Pretty stupid of you to say no!' };
+      return null;
+    },
     validate: (v) => v !== null
   },
   {
     id: 'smoke', type: 'yesno',
     text: 'Do you smoke?',
-    feedback: null,
+    feedback: (v) => {
+      if (v === 'yes') return { cls: 'hint', msg: 'Why are you here then?' };
+      if (v === 'no')  return { cls: 'hint', msg: 'Nice' };
+      return null;
+    },
     validate: (v) => v !== null
   },
   {
-    id: 'bongo', type: 'text',
-    text: 'What is a bongo?',
+    id: 'survey', type: 'text',
+    text: 'what are you feeling right now?',
     placeholder: 'Describe in your own words…',
     feedback: (v) => {
       if (!v) return null;
-      const l = v.toLowerCase();
-      if (l.includes('drum') || l.includes('music') || l.includes('antelope') || l.includes('animal'))
-        return { cls: 'ok', msg: '✓ Partially accepted. Continue.' };
       if (v.length > 20) return { cls: 'hint', msg: 'Assessment engine processing…' };
       return null;
     },
     validate: (v) => v !== null && v.trim().length > 3
   },
   {
-    id: 'bongo_smoke', type: 'text',
-    text: 'If you do not smoke, how do you know what a bongo is?',
-    placeholder: 'Explain your reasoning…',
+    id: 'view', type: 'mc',
+    text: 'Do you like the view?',
+    options: ['Yes', 'You are my View', 'Ehw', 'Pass'],
     feedback: null,
-    validate: (v) => v !== null && v.trim().length > 0
+    validate: (v) => v !== null
   },
   {
     id: 'joke', type: 'textarea',
@@ -588,7 +694,7 @@ const questions = [
   },
   {
     id: 'birds', type: 'mc',
-    text: 'How do you feel about birds?',
+    text: 'How do you feel about birdwatching with me?',
     options: ['Deeply fond of them', 'Neutral observer', 'Mild indifference', 'Strong reservations'],
     validate: (v) => v !== null
   },
@@ -661,16 +767,59 @@ const questions = [
       return null;
     },
     validate: (v) => v !== null
-  }
+  },
+  {
+    id: 'name', type: 'text',
+    text: 'Final question, What is my name again?',
+    placeholder: 'Enter name…',
+    feedback: (v) => {
+      if (!v) return null;
+      if (v.length > 4) return { cls: 'err', msg: '✗ Name not recognised in database.' };
+      return { cls: 'hint', msg: 'Keep entering…' };
+    },
+    validate: (v) => v !== null && v.trim().length > 0
+  },
+  {
+    id: 'name_correct', type: 'yesno',
+    text: 'Did you type it correctly?',
+    feedback: null,
+    validate: (v) => v !== null
+  },
+  {
+    id: 'name_sure', type: 'yesno',
+    text: 'Are you sure?',
+    feedback: null,
+    validate: (v) => v !== null
+  },
 ];
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
+// Pre-pick which question indices will be preceded by a DYK slide (2 random ones)
+function pickDykSlots(numQuestions) {
+  const slots = new Set();
+  // Place DYK slides before question indices 3–17, not at the very start or end
+  const pool = [];
+  for (let i = 2; i < numQuestions - 3; i++) pool.push(i);
+  while (slots.size < 2 && pool.length) {
+    const idx = Math.floor(Math.random() * pool.length);
+    slots.add(pool[idx]);
+    pool.splice(idx, 1);
+  }
+  return slots;
+}
+
 const state = {
   screen: 'intro',
   qIndex: 0,
   answers: {},
   validationCode: generateCode(),
   currentValue: null,
+  startTime: null,
+  dykSlots: null,         // Set of question indices that show a DYK before them
+  dykShown: new Set(),    // Which DYK slots already shown
+  dykFacts: [...DID_YOU_KNOW_FACTS].sort(() => Math.random() - 0.5),
+  dykFactIndex: 0,
+  inDyk: false,           // Currently showing a DYK slide
 };
 
 // ─── SCORE ────────────────────────────────────────────────────────────────────
@@ -684,10 +833,10 @@ function computeScore() {
 }
 
 function getStatus(score) {
-  if (score >= 88) return 'Exceptional Compatibility';
-  if (score >= 78) return 'High Compatibility';
-  if (score >= 68) return 'Moderate Compatibility';
-  if (score >= 58) return 'Marginal Compatibility';
+  if (score >= 88) return 'Mabye';
+  if (score >= 78) return 'Thinking about it';
+  if (score >= 68) return 'Horrible score';
+  if (score >= 58) return 'Ewh';
   return 'Compatibility Pending Further Review';
 }
 
@@ -710,12 +859,13 @@ function brandHTML() {
 }
 
 function progressHTML() {
-  const pct = ((state.qIndex + 1) / questions.length) * 100;
-  const displayed = displayIndices[state.qIndex] || (state.qIndex + 1);
+  // Progress bar fills proportionally: current displayed index / TOTAL_DISPLAY
+  const displayedNum = displayIndices[state.qIndex] || (state.qIndex + 1);
+  const pct = Math.min(100, (displayedNum / TOTAL_DISPLAY) * 100);
   return `<div class="progress-wrap">
     <div class="progress-meta">
       <span class="progress-label">Assessment Progress</span>
-      <span class="progress-count">Question ${displayed} of ${TOTAL_DISPLAY}</span>
+      <span class="progress-count">Question ${displayedNum} of ${TOTAL_DISPLAY}</span>
     </div>
     <div class="progress-track">
       <div class="progress-fill" style="width:${pct}%">
@@ -812,19 +962,49 @@ function renderQuestion() {
   ${nextBtnHTML(isValid, label)}`;
 }
 
+function renderDyk() {
+  const fact = state.dykFacts[state.dykFactIndex % state.dykFacts.length];
+  state.dykFactIndex++;
+  return `${brandHTML()}
+  ${progressHTML()}
+  <div class="dyk-eyebrow">${FEATHER_SMALL} Interlude</div>
+  <div class="dyk-title">Did you <span>Know?</span></div>
+  <div class="dyk-fact">${esc(fact)}</div>
+  <button class="btn btn-full" onclick="continuFromDyk()">Continue ${CHEVRON}</button>`;
+}
+
 function renderResults() {
-  const score = computeScore();
-  const status = getStatus(score);
+  // Score: random between -1000 and -10, displayed as number out of 100
+  const negScore = -(Math.floor(Math.random() * 991) + 10); // -10 to -1000
+  const displayScore = negScore; // show the negative number
+  const status = getStatus(51 + Math.floor(Math.random() * 44)); // still pick a status label
+
+  // Time elapsed
+  let timeStr = '';
+  if (state.startTime) {
+    const secs = Math.round((Date.now() - state.startTime) / 1000);
+    const m = Math.floor(secs / 60), s = secs % 60;
+    timeStr = m > 0 ? `${m}m ${s}s` : `${s}s`;
+  }
+
+  const endCode = generateEndCode(state.validationCode);
+
   return `${brandHTML()}
   <div class="results-bird"><svg width="64" height="42" viewBox="0 0 64 42" fill="none"><path d="M0 24 C10 13, 22 8, 32 11 C38 12.5, 43 16, 54 8 C59 5, 62 2.5, 64 0 C63 6, 61 14, 55 17 C48 19, 43 17, 38 19 C32 20.5, 26 25, 21 30 C15 35, 7 38, 0 35 Z" fill="currentColor"/><path d="M32 11 L37 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
   <div class="results-score-label">Compatibility Score</div>
-  <div class="results-score">${score}<span class="results-pct">%</span></div>
+  <div class="results-score">${displayScore}<span class="results-pct">/ 100</span></div>
   <div class="results-status">${status}</div>
+  ${timeStr ? `<div class="results-time">Completed in ${timeStr}</div>` : ''}
   <div class="results-vcode-section">
-    <div class="vcode-label">Validation Code</div>
+    <div class="vcode-label">Start Validation Code</div>
     <div class="vcode-box">
       <span class="vcode-egg">${EGG_SVG}</span>
       <span class="vcode-value">${state.validationCode}</span>
+    </div>
+    <div class="vcode-label" style="margin-top:12px">End Validation Code</div>
+    <div class="vcode-box">
+      <span class="vcode-egg">${EGG_SVG}</span>
+      <span class="vcode-value">${endCode}</span>
     </div>
   </div>`;
 }
@@ -859,6 +1039,9 @@ function transition(renderFn) {
 function startSurvey() {
   state.qIndex = 0;
   state.currentValue = null;
+  state.startTime = Date.now();
+  state.dykSlots = pickDykSlots(questions.length);
+  state.inDyk = false;
   transition(renderQuestion);
 }
 
@@ -883,6 +1066,18 @@ function onTextInput(val) {
   refreshNextButton();
 }
 
+function showPlusOne() {
+  const msg = ENCOURAGING_MESSAGES[Math.floor(Math.random() * ENCOURAGING_MESSAGES.length)];
+  const overlay = document.createElement('div');
+  overlay.className = 'plus-one-overlay';
+  overlay.innerHTML = `<div class="plus-one-bubble">
+    <span class="plus-one-num">+1</span>
+    <span class="plus-one-msg">${msg}</span>
+  </div>`;
+  document.body.appendChild(overlay);
+  setTimeout(() => overlay.remove(), 1700);
+}
+
 function selectYN(val) {
   state.currentValue = val;
   const q = questions[state.qIndex];
@@ -899,7 +1094,37 @@ function selectYN(val) {
   const fbEl = card.querySelector('.inp-feedback');
   if (fbEl) { fbEl.className = 'inp-feedback' + (fb ? ' ' + fb.cls : ''); fbEl.innerHTML = fb ? fb.msg : ''; }
 
+  // Show +1 animation for "yes" answers (considered the "correct" positive answer)
+  if (val === 'yes') showPlusOne();
+
   refreshNextButton();
+}
+
+function continuFromDyk() {
+  state.inDyk = false;
+  transition(renderQuestion);
+}
+
+function nextQuestion() {
+  const q = questions[state.qIndex];
+  if (!q.validate(state.currentValue)) return;
+
+  state.answers[q.id] = state.currentValue;
+  state.qIndex++;
+
+  if (state.qIndex >= questions.length) {
+    transition(renderResults);
+  } else {
+    state.currentValue = null;
+    // Check if this question index should show a DYK first
+    if (state.dykSlots && state.dykSlots.has(state.qIndex) && !state.dykShown.has(state.qIndex)) {
+      state.dykShown.add(state.qIndex);
+      state.inDyk = true;
+      transition(renderDyk);
+    } else {
+      transition(renderQuestion);
+    }
+  }
 }
 
 function selectMC(btn) {
@@ -923,20 +1148,7 @@ function refreshNextButton() {
   btn.className = 'btn btn-full btn-next' + (valid ? '' : ' btn-slate');
 }
 
-function nextQuestion() {
-  const q = questions[state.qIndex];
-  if (!q.validate(state.currentValue)) return;
 
-  state.answers[q.id] = state.currentValue;
-  state.qIndex++;
-
-  if (state.qIndex >= questions.length) {
-    transition(renderResults);
-  } else {
-    state.currentValue = null;
-    transition(renderQuestion);
-  }
-}
 
 // ─── INIT ─────────────────────────────────────────────────────────────────────
 document.getElementById('main-card').innerHTML = renderIntro();
