@@ -600,9 +600,10 @@ function generateEndCode(startCode) {
 const DID_YOU_KNOW_FACTS = [
   "Her favorite animal is actually a Zebra! Its true, ask her.",
   "Do you like movies? Well, too bad. She doesn't like movies that mutch.",
-  "Are you great? because she is great!",
+  "Are you great? because she is great! And quite funny!",
   "She likes walking, carnittas, and going to the gym!",
   "Her bedtime is at 22h, but will wake up at 6am to stare at you.",
+  "People are very lucky to have her as a friend.",
 ];
 
 // ─── ENCOURAGING MESSAGES ─────────────────────────────────────────────────────
@@ -613,12 +614,22 @@ const ENCOURAGING_MESSAGES = [
 
 // ─── QUESTIONS ────────────────────────────────────────────────────────────────
 const TOTAL_DISPLAY = 765;
-const displayIndices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+const displayIndices = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,21,22,23,24,25,26,27,28,29,30];
 
 const questions = [
     {
     id: 'date', type: 'yesno',
     text: 'Would you like to date-date me?',
+    feedback: (v) => {
+      if (v === 'yes') return { cls: 'hint', msg: 'Of course you would' };
+      if (v === 'no')  return { cls: 'hint', msg: 'Pretty stupid of you to say no!' };
+      return null;
+    },
+    validate: (v) => v !== null
+  },
+  {
+    id: 'family', type: 'yesno',
+    text: 'Would you want a family?',
     feedback: (v) => {
       if (v === 'yes') return { cls: 'hint', msg: 'Of course you would' };
       if (v === 'no')  return { cls: 'hint', msg: 'Pretty stupid of you to say no!' };
@@ -637,16 +648,6 @@ const questions = [
       return { cls: 'lower', msg: `${ARROW_DOWN} Lower` };
     },
     validate: (v) => v !== null && v.trim() !== '' && !isNaN(parseInt(v))
-  },
-  {
-    id: 'family', type: 'yesno',
-    text: 'Do you want a family?',
-    feedback: (v) => {
-      if (v === 'yes') return { cls: 'hint', msg: 'Of course you would' };
-      if (v === 'no')  return { cls: 'hint', msg: 'Pretty stupid of you to say no!' };
-      return null;
-    },
-    validate: (v) => v !== null
   },
   {
     id: 'smoke', type: 'yesno',
@@ -715,10 +716,16 @@ const questions = [
     validate: (v) => v !== null
   },
   {
-    id: 'weather', type: 'yesno',
-    text: 'Do you enjoy being outside in light rain?',
-    feedback: null,
-    validate: (v) => v !== null
+    id: 'bird_number', type: 'numeric',
+    text: 'How many birds are enough birds',
+    placeholder: '0', unit: 'years',
+    numFeedback: (v) => {
+      const n = parseInt(v);
+      if (isNaN(n) || v === '') return null;
+      if (n < 256) return { cls: 'higher', msg: `${ARROW_UP} Higher` };
+      return { cls: 'lower', msg: `${ARROW_DOWN} Lower` };
+    },
+    validate: (v) => v !== null && v.trim() !== '' && !isNaN(parseInt(v))
   },
   {
     id: 'playlist', type: 'text',
@@ -883,10 +890,10 @@ function nextBtnHTML(isValid, label) {
 
 function renderIntro() {
   return `${brandHTML()}
-  <div class="intro-subtitle">Compatibility Assessment · Form ACI-7</div>
-  <div class="intro-title">Candidate<br>Evaluation Survey</div>
-  <p class="intro-desc">This survey is used to determine compatibility with the candidate. The assessment consists of multiple questions of varying importance. Please answer each question honestly. Once started, the survey cannot be restarted.</p>
-  <div class="vcode-label">Validation Code — retain for your records</div>
+  <div class="intro-subtitle">Date Assessment</div>
+  <div class="intro-title">Date<br>Evaluation Survey</div>
+  <p class="intro-desc">This survey is used to evaluate dateness. The assessment consists of multiple questions of extreme importance. Once started, the survey cannot be restarted. It uses a remote server to store behaviour</p>
+  <div class="vcode-label">Validation Code — comunicate code now</div>
   <div class="vcode-box">
     <span class="vcode-egg">${EGG_SVG}</span>
     <span class="vcode-value">${state.validationCode}</span>
